@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>jQuery ($.ajax)) : XML</title>
+<style>
+table {
+	margin: auto;
+}
+
+table, tr, th, td {
+	border: black 1px solid;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+th, td {
+	width: 100px;
+}
+</style>
+<script src="generate-temperatures-table.js"></script>
+<script
+			  src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script>
+<script defer>
+	function handleData(docxml) {
+		var tab = [];
+		var mts = docxml.getElementsByTagName("month");
+		for (let i = 0; i < mts.length; i++) {
+			tab[i] = [ mts[i].attributes["name"].value,
+					mts[i].attributes["value"].value ];
+		}
+		console.debug(tab);
+		generateTemperaturesTable(tab, document.querySelector("#tableau"));
+	}
+
+	$(document).ready(function() {
+		$.ajax({
+			url : "temperatures.xml",
+			type : "GET",
+			dataType : "xml",
+			statusCode : {
+				404 : function() {
+					alert("page not found");
+				}
+			}
+		}).done(function(data) {
+			alert('données récupérées via Ajax');
+			handleData(data);
+		}).fail(function(a, b, c) {
+			alert(b + ' ' + c);
+		});
+	});
+	$(document).ready(function() {
+		alert('Document chargé !');
+	});
+</script>
+</head>
+<body>
+	<h1 style="text-align: center">Average temperatures for Angers</h1>
+	<table id="tableau">
+		<tr>
+			<th>Month</th>
+			<th>Average temperature</th>
+		</tr>
+	</table>
+</body>
+</html>

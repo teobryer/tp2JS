@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>jQuery ($.ajax)) : JSON</title>
+<style>
+table {
+	margin: auto;
+}
+
+table, tr, th, td {
+	border: black 1px solid;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+th, td {
+	width: 100px;
+}
+</style>
+<script src="generate-temperatures-table.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+	function handleData(tab) {
+		generateTemperaturesTable(tab, document.querySelector("#tableau"));
+	}
+
+	$(document).ready(function() {
+		$.ajax({
+			url : "get-temperatures.php",
+			type : "GET",
+			dataType : "json",
+			statusCode : {
+				404 : function() {
+					alert("page not found");
+				}
+			}
+		}).done(function(data) {
+			alert('données récupérées via Ajax');
+			handleData(data);
+		}).fail(function(a, b, c) {
+			alert(b + ' ' + c);
+		});
+	});
+	$(document).ready(function() {
+		alert('Document chargé !');
+	});
+</script>
+</head>
+<body>
+	<h1 style="text-align: center">Average temperatures for Angers</h1>
+	<table id="tableau">
+		<tr>
+			<th>Month</th>
+			<th>Average temperature</th>
+		</tr>
+	</table>
+</body>
+</html>
